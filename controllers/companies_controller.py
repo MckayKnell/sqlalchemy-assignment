@@ -31,6 +31,34 @@ def company_add(req):
         return jsonify({'message': 'unable to create record'}), 400
 
 
+def company_get():
+    query = db.session.query(Companies).all()
+
+    companies_list = []
+
+    for company in query:
+        companies_list.append({
+            "company_id": company.company_id,
+            "company_name": company.company_name,
+        })
+    return jsonify({"message": "company found", "results": companies_list}), 200
+
+
+def company_by_id(company_id):
+    query = db.session.query(Companies).filter(Companies.company_id == company_id).all()
+
+    if not query:
+        return jsonify({"message": f'company could not be found'}), 404
+    companies_list = []
+
+    for company in query:
+        companies_list.append({
+            "company_id": company.company_id,
+            "companies_name": company.company_name
+        })
+    return jsonify({"message": "company found", "results": companies_list}), 200
+
+
 def company_update(req, company_id):
     query = db.session.query(Companies).filter(Companies.company_id == company_id).first()
     post_data = req.form if req.form else req.get_json()

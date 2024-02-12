@@ -51,3 +51,49 @@ def category_update(req, category_id):
     except:
         db.session.rollback()
         return jsonify({"message": "unable to update record"}), 400
+
+
+def category_get():
+    query = db.session.query(Categories).all()
+
+    categories_list = []
+
+    for category in query:
+        categories_list.append({
+            "category_id": category.category_id,
+            "category_name": category.category_name,
+        })
+    return jsonify({"message": "category found", "results": categories_list}), 200
+
+
+def category_by_id(category_id):
+    query = db.session.query(Categories).filter(Categories.category_id == category_id).all()
+
+    if not query:
+        return jsonify({"message": f'category could not be found'}), 404
+    categories_list = []
+
+    for category in query:
+        categories_list.append({
+            "category_id": category.category_id,
+            "categories_name": category.category_name
+        })
+    return jsonify({"message": "categories found", "results": categories_list}), 200
+
+
+def category_update(req, category_id):
+    query = db.session.query(Categories).filter(Categories.category_id == category_id).first()
+    post_data = req.form if req.form else req.get_json()
+    print(post_data)
+
+    query.category_name = post_data.get("category_name", query.category_name)
+
+    try:
+        db.session.commit()
+        return jsonify({'message': 'cateogory updated', 'results': {
+            'category_id': query.category_id,
+            'category_name': query.category_name
+        }}), 200
+    except:
+        db.session.rollback()
+        return jsonify({"message": "unable to update record"}), 400

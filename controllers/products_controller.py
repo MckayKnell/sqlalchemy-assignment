@@ -32,6 +32,61 @@ def products_add(req):
         return jsonify({'message': 'unable to create record'}), 400
 
 
+def products_get():
+    query = db.session.query(Products).all()
+
+    products_list = []
+
+    for product in query:
+        products_list.append({
+            "product_id": product.product_id,
+            "company_id": product.company_id,
+            "products_name": product.product_name,
+            "decription": product.description,
+            "price": product.price,
+            "active": product.active
+        })
+    return jsonify({"message": "products found", "results": products_list}), 200
+
+
+def products_active(active):
+    query = db.session.query(Products).filter(Products.active == active).all()
+
+    if not query:
+        return jsonify({"message": f'product could not be found'}), 404
+    products_list = []
+
+    for product in query:
+        products_list.append({
+            "product_id": product.product_id,
+            "company_id": product.company_id,
+            "products_name": product.product_name,
+            "decription": product.description,
+            "price": product.price,
+            "active": product.active
+        })
+    return jsonify({"message": "products found", "results": products_list}), 200
+
+
+def products_by_id(product_id):
+    query = db.session.query(Products).filter(Products.product_id == product_id).all()
+
+    if not query:
+        return jsonify({"message": f'product could not be found'}), 404
+    products_list = []
+
+    for product in query:
+        products_list.append({
+            "product_id": product.product_id,
+            "company_id": product.company_id,
+            "products_name": product.product_name,
+            "decription": product.description,
+            "price": product.price,
+            "active": product.active
+        })
+    return jsonify({"message": "products found", "results": products_list}), 200
+
+
 def products_update(req, product_id):
     query = db.session.query(Products).filter(Products.product_id == product_id).first()
     post_data = req.form if req.form else req.get_json()
@@ -56,4 +111,19 @@ def products_update(req, product_id):
         db.session.rollback()
         return jsonify({"message": "unable to update record"}), 400
 
-    # return jsonify({"message": 'product updated', "results": query}), 200
+
+def product_delete(product_id):
+    query = db.session.query(Products).filter(Products.product_id == product_id).first()
+
+    if not query:
+        return jsonify({"message": 'product could not be found'}), 404
+
+    try:
+        db.session.delete(query)
+        db.session.commit()
+
+    except:
+        db.session.rollback()
+        return jsonify({"message": "unable to delete product"})
+
+    return jsonify({'message': 'record has been deleted'})

@@ -1,6 +1,6 @@
 from db import db
 
-products_categories_association_table = db.Table(
+xref_association_table = db.Table(
     "ProductsCategoriesAssociation",
     db.Model.metadata,
     db.Column('product_id', db.ForeignKey('Products.product_id'), primary_key=True),
