@@ -8,7 +8,6 @@ from models.company import Companies
 from models.products import Products
 from routes.category_routes import categories
 from routes.companies_routes import companies
-from routes.product_category_xref import xref
 from routes.products_routes import products
 
 
@@ -30,7 +29,6 @@ init_db(app, db)
 
 app.register_blueprint(categories)
 app.register_blueprint(companies)
-app.register_blueprint(xref)
 app.register_blueprint(products)
 
 
