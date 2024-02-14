@@ -60,11 +60,11 @@ def company_by_id(company_id):
 
 
 def company_update(req, company_id):
+    post_data = req.form if req.form else req.json
     query = db.session.query(Companies).filter(Companies.company_id == company_id).first()
-    post_data = req.form if req.form else req.get_json()
     print(post_data)
 
-    query.product_name = post_data.get("company_name", query.company_name)
+    query.company_name = post_data.get("company_name", query.company_name)
 
     try:
         db.session.commit()

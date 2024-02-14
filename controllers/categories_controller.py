@@ -36,8 +36,8 @@ def category_add(req):
 
 
 def category_update(req, category_id):
-    query = db.session.query(Categories).filter(Categories.category_id == category_id).first()
     post_data = req.form if req.form else req.get_json()
+    query = db.session.query(Categories).filter(Categories.category_id == category_id).first()
     print(post_data)
 
     query.category_name = post_data.get("category_name", query.category_name)

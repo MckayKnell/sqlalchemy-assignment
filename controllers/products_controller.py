@@ -49,8 +49,8 @@ def products_get():
     return jsonify({"message": "products found", "results": products_list}), 200
 
 
-def products_active(active):
-    query = db.session.query(Products).filter(Products.active == active).all()
+def products_active():
+    query = db.session.query(Products).filter(Products.active == True).all()
 
     if not query:
         return jsonify({"message": f'product could not be found'}), 404
@@ -112,7 +112,7 @@ def products_update(req, product_id):
         return jsonify({"message": "unable to update record"}), 400
 
 
-def product_delete(product_id):
+def product_delete(req, product_id):
     query = db.session.query(Products).filter(Products.product_id == product_id).first()
 
     if not query:

@@ -5,8 +5,8 @@ products = Blueprint('products', __name__)
 
 
 @products.route('/products', methods=['POST'])
-def products_add(req):
-    return products_controller.products_add(req)
+def products_add():
+    return products_controller.products_add(request)
 
 
 @products.route('/products', methods=['GET'])
@@ -24,11 +24,11 @@ def products_by_id(product_id):
     return products_controller.products_by_id(product_id)
 
 
-@products.route('/products/product_id', methods=['PUT'])
-def products_update(req):
-    return products_controller.products_update(req)
+@products.route('/products/<product_id>', methods=['PUT'])
+def products_update(product_id):
+    return products_controller.products_update(request, product_id)
 
 
-@products.route('/products/product_id', methods=['DELETE'])
+@products.route('/products/delete/<product_id>', methods=['DELETE'])
 def product_delete(product_id):
-    return products_controller.product_delete(product_id)
+    return products_controller.product_delete(request, product_id)
