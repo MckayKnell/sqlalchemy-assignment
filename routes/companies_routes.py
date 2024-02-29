@@ -10,8 +10,8 @@ def company_add():
 
 
 @companies.route('/companies', methods=['GET'])
-def company_get():
-    return companies_controller.company_get()
+def companies_get():
+    return companies_controller.companies_get()
 
 
 @companies.route('/companies/<company_id>', methods=['GET'])

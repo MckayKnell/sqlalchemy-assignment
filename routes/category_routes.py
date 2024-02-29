@@ -10,8 +10,8 @@ def category_add():
 
 
 @categories.route('/categories', methods=['GET'])
-def category_get():
-    return categories_controller.category_get()
+def categories_get():
+    return categories_controller.categories_get()
 
 
 @categories.route('/categories/<category_id>', methods=['GET'])

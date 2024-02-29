@@ -1,7 +1,7 @@
 from flask import jsonify
 
 from db import db
-from models.category import Categories
+from models.categories import Categories
 
 
 def category_add(req):
@@ -35,25 +35,7 @@ def category_add(req):
     return jsonify({'message': 'category created', 'result': values}), 201
 
 
-def category_update(req, category_id):
-    post_data = req.form if req.form else req.get_json()
-    query = db.session.query(Categories).filter(Categories.category_id == category_id).first()
-    print(post_data)
-
-    query.category_name = post_data.get("category_name", query.category_name)
-
-    try:
-        db.session.commit()
-        return jsonify({'message': 'cateogory updated', 'results': {
-            'category_id': query.category_id,
-            'category_name': query.category_name
-        }}), 200
-    except:
-        db.session.rollback()
-        return jsonify({"message": "unable to update record"}), 400
-
-
-def category_get():
+def categories_get():
     query = db.session.query(Categories).all()
 
     categories_list = []
@@ -84,16 +66,12 @@ def category_by_id(category_id):
 def category_update(req, category_id):
     query = db.session.query(Categories).filter(Categories.category_id == category_id).first()
     post_data = req.form if req.form else req.get_json()
-    print(post_data)
 
     query.category_name = post_data.get("category_name", query.category_name)
 
     try:
         db.session.commit()
-        return jsonify({'message': 'cateogory updated', 'results': {
-            'category_id': query.category_id,
-            'category_name': query.category_name
-        }}), 200
+        return jsonify({'message': 'cateogory updated'}), 200
     except:
         db.session.rollback()
         return jsonify({"message": "unable to update record"}), 400

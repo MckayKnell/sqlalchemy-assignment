@@ -1,7 +1,7 @@
 from flask import jsonify
 
 from db import db
-from models.company import Companies
+from models.companies import Companies
 
 
 def company_add(req):
@@ -31,7 +31,7 @@ def company_add(req):
         return jsonify({'message': 'unable to create record'}), 400
 
 
-def company_get():
+def companies_get():
     query = db.session.query(Companies).all()
 
     companies_list = []
@@ -41,7 +41,7 @@ def company_get():
             "company_id": company.company_id,
             "company_name": company.company_name,
         })
-    return jsonify({"message": "company found", "results": companies_list}), 200
+    return jsonify({"message": "companies found", "results": companies_list}), 200
 
 
 def company_by_id(company_id):
@@ -62,16 +62,12 @@ def company_by_id(company_id):
 def company_update(req, company_id):
     post_data = req.form if req.form else req.json
     query = db.session.query(Companies).filter(Companies.company_id == company_id).first()
-    print(post_data)
 
     query.company_name = post_data.get("company_name", query.company_name)
 
     try:
         db.session.commit()
-        return jsonify({'message': 'company updated', 'results': {
-            'company_id': query.company_id,
-            'company_name': query.company_name
-        }}), 200
+        return jsonify({'message': 'company updated'}), 200
     except:
         db.session.rollback()
         return jsonify({"message": "unable to update record"}), 400

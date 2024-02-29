@@ -4,7 +4,7 @@ from db import db
 from models.products import Products
 
 
-def products_add(req):
+def product_add(req):
     post_data = req.form if req.form else req.json
 
     fields = ['product_name', 'price', 'description', 'company_id']
@@ -26,7 +26,7 @@ def products_add(req):
         db.session.commit()
         query = db.session.query(Products).filter(Products.product_name == values['product_name']).first()
         values['product_id'] = query.product_id
-        return jsonify({'message': 'products created', 'result': values}), 201
+        return jsonify({'message': 'product created', 'result': values}), 201
     except:
         db.session.rollback()
         return jsonify({'message': 'unable to create record'}), 400
@@ -53,7 +53,7 @@ def products_active():
     query = db.session.query(Products).filter(Products.active == True).all()
 
     if not query:
-        return jsonify({"message": f'product could not be found'}), 404
+        return jsonify({"message": f'products could not be found'}), 404
     products_list = []
 
     for product in query:
@@ -68,7 +68,7 @@ def products_active():
     return jsonify({"message": "products found", "results": products_list}), 200
 
 
-def products_by_id(product_id):
+def product_by_id(product_id):
     query = db.session.query(Products).filter(Products.product_id == product_id).all()
 
     if not query:
@@ -87,10 +87,9 @@ def products_by_id(product_id):
     return jsonify({"message": "products found", "results": products_list}), 200
 
 
-def products_update(req, product_id):
+def product_update(req, product_id):
     query = db.session.query(Products).filter(Products.product_id == product_id).first()
     post_data = req.form if req.form else req.get_json()
-    print(post_data)
 
     query.product_id = post_data.get("product_id", query.product_id)
     query.product_name = post_data.get("product_name", query.product_name)
@@ -100,13 +99,7 @@ def products_update(req, product_id):
 
     try:
         db.session.commit()
-        return jsonify({'message': 'product updated', 'results': {
-            'product_id': query.product_id,
-            'product_name': query.product_name,
-            'description': query.description,
-            'price': query.price,
-            'active': query.active
-        }}), 200
+        return jsonify({'message': 'product updated'}), 200
     except:
         db.session.rollback()
         return jsonify({"message": "unable to update record"}), 400
