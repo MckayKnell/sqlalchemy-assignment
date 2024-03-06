@@ -35,7 +35,7 @@ def category_add(req):
     return jsonify({'message': 'category created', 'result': values}), 201
 
 
-def categories_get():
+def categories_get_all():
     query = db.session.query(Categories).all()
 
     categories_list = []

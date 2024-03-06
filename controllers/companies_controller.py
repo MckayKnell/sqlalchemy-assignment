@@ -31,7 +31,7 @@ def company_add(req):
         return jsonify({'message': 'unable to create record'}), 400
 
 
-def companies_get():
+def companies_get_all():
     query = db.session.query(Companies).all()
 
     companies_list = []

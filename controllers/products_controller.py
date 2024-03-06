@@ -2,6 +2,7 @@ from flask import jsonify
 
 from db import db
 from models.products import Products
+from models.categories import Categories
 
 
 def product_add(req):
@@ -32,7 +33,35 @@ def product_add(req):
         return jsonify({'message': 'unable to create record'}), 400
 
 
-def products_get():
+def product_add_category(req):
+    post_data = req.form if req.form else req.json
+
+    product_id = post_data.get('product_id')
+    category_id = post_data.get('category_id')
+
+    product_query = db.session.query(Products).filter(Products.product_id == product_id).first()
+    category_query = db.session.query(Categories).filter(Categories.category_id == category_id).first()
+
+    product_query.categories.append(category_query)
+    db.session.commit()
+    return jsonify({'message': 'category assigned to product', 'results': product_query})
+
+
+def product_remove_category(req):
+    post_data = req.form if req.form else req.json
+
+    product_id = post_data.get('product_id')
+    category_id = post_data.get('category_id')
+
+    product_query = db.session.query(Products).filter(Products.product_id == product_id).first()
+    category_query = db.session.query(Categories).filter(Categories.category_id == category_id).first()
+
+    product_query.categories.remove(category_query)
+    db.session.commit()
+    return jsonify({'message': 'category assigned to product', 'results': product_query})
+
+
+def products_get_all():
     query = db.session.query(Products).all()
 
     products_list = []
@@ -70,6 +99,25 @@ def products_active():
 
 def product_by_id(product_id):
     query = db.session.query(Products).filter(Products.product_id == product_id).all()
+
+    if not query:
+        return jsonify({"message": f'product could not be found'}), 404
+    products_list = []
+
+    for product in query:
+        products_list.append({
+            "product_id": product.product_id,
+            "company_id": product.company_id,
+            "products_name": product.product_name,
+            "decription": product.description,
+            "price": product.price,
+            "active": product.active
+        })
+    return jsonify({"message": "products found", "results": products_list}), 200
+
+
+def product_by_company_id(company_id):
+    query = db.session.query(Products).filter(Products.company_id == company_id).all()
 
     if not query:
         return jsonify({"message": f'product could not be found'}), 404

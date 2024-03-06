@@ -3,8 +3,8 @@ import psycopg2
 import os
 
 from db import *
-from models.category import Categories
-from models.company import Companies
+from models.categories import Categories
+from models.companies import Companies
 from models.products import Products
 from routes.category_routes import categories
 from routes.companies_routes import companies
